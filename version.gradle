@@ -1,0 +1,20 @@
+ext.deps = [:]//空映射
+def build_version = [:]
+build_version.min_sdk = 15
+build_version.compile_sdk = 26
+build_version.build_tools = "26.0.2"
+build_version.target_sdk = 26
+ext.build_version = build_version
+
+
+
+def versions = [:]
+versions.support = "26.1.0"
+versions.constraint = "1.1.2"
+
+def deps = [:]
+
+def support = [:]
+support.v7 = "com.android.support:appcompat-v7:$versions.support"
+deps.support = support
+

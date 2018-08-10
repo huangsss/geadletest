@@ -1,0 +1,81 @@
+apply plugin: 'com.android.application'
+
+Properties props = new Properties()
+props.load(new FileInputStream(file("..//signning.properties")))
+
+
+
+android {
+    compileSdkVersion build_version.compile_sdk
+    defaultConfig {
+        applicationId "com.huangasys.geadletest"
+        minSdkVersion build_version.min_sdk
+        targetSdkVersion build_version.target_sdk
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+
+    signingConfigs {
+        release {
+            storeFile file(props['KEYSTORE_FILE'])      //签名文件
+            keyAlias props['KEY_ALIAS']
+            storePassword props['KEYSTORE_PASSWORD']
+            keyPassword props['KEY_PASSWORD']  //签名密码
+        }
+        debug {
+            storeFile file(props['DEBUG_KEYSTORE'])      //签名文件
+            keyAlias props['DEBUG_ALIAS']
+            storePassword props['DEBUG_KEYSTORE_PWD']
+            keyPassword props['DEBUG_KEY_PWD']  //签名密码
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output -> //each -> all
+            def outputFile = output.outputFile
+            if (variant.buildType.name.equals('release')) {
+                def fileName = "${defaultConfig.versionCode}_${defaultConfig.versionName}_release.apk"
+
+                if(outputFile != null && outputFile.name.endsWith(".apk")){
+                    outputFileName = fileName //  output.outputFile 改为 outputFileName
+                }
+
+//                output.outputFile = new File(outputFile.parent, fileName)
+            } else if (variant.buildType.name.equals('debug')) {
+                def fileName = "${defaultConfig.versionCode}_${defaultConfig.versionName}_debug.apk"
+
+//                output.outputFile = new File(outputFile.parent, fileName)
+                if(outputFile != null && outputFile.name.endsWith(".apk")){
+                    outputFileName = fileName //  output.outputFile 改为 outputFileName
+                }
+            }
+        }
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    testImplementation 'junit:junit:4.12'
+    /*  androidTestImplementation 'com.android.support.test:runner:1.0.2'
+      androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'*/
+}
