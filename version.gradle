@@ -1,20 +1,33 @@
 ext.deps = [:]//空映射
-def build_version = [:]
-build_version.min_sdk = 15
-build_version.compile_sdk = 26
-build_version.build_tools = "26.0.2"
-build_version.target_sdk = 26
-ext.build_version = build_version
 
-
-
+//定义版本号;
 def versions = [:]
 versions.support = "26.1.0"
 versions.constraint = "1.1.2"
 
 def deps = [:]
 
+//start
 def support = [:]
 support.v7 = "com.android.support:appcompat-v7:$versions.support"
 deps.support = support
+//end
 
+//start1
+def test = [:]
+test.constraint_layout = "com.android.support.constraint:constraint-layout:$versions.constraint"
+deps.test = test
+//end1
+
+//end
+ext.deps = deps
+
+
+//版本统一start
+def build_version = [:]
+build_version.min_sdk = 15  //使用关键字作为标识符
+build_version.compile_sdk = 26
+build_version.build_tools = "26.0.2"
+build_version.target_sdk = 26
+ext.build_version = build_version  //build_version创建了一个名字为build_version属性，值是build_version
+//版本统一end
